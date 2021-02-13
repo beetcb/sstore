@@ -4,7 +4,9 @@
 
 ### when to use it?
 
-when you have a tiny piese of data(a `secret-key`, for example), `tcb-conf` stores it for you. **Don't Worry: it will still be there next time you invoke that function**
+When you have a tiny piese of data(a `secret-key`, for example), `tcb-conf` stores it for you. **Don't Worry: it will still be there next time you invoke that function**
+
+Inaccurately, tcb-conf cloud be alternative to a database (for storing tiny data)
 
 Note: Only using it inside Client NodeJS, it's convenient!
 
@@ -14,7 +16,7 @@ Note: Only using it inside Client NodeJS, it's convenient!
 const Conf = require('@beetcb/tcb-conf')
 
 /**
- * Conf instructor takes in two params to create a entity
+ * Conf instructor takes in 1 or 0 param to create a entity
  * - `timeout` your function timeout, you can ignore it when the default timeout is used
  */
 const conf = new Conf(10)
