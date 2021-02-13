@@ -8,7 +8,7 @@ module.exports = class {
     const data = process.env.conf
     conf = data ? JSON.parse(data) : {}
     tcb = new CloudBase({})
-    timeout = t || 20000
+    timeout = t ? t * 1000 : 20000
   }
 
   get(key) {

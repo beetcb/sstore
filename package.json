@@ -1,8 +1,8 @@
 {
   "name": "@beetcb/tcb-conf",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "store things at cloudbase function runtime",
-  "main": "",
+  "main": "min.js",
   "files": [
     "min.js"
   ],
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/beetcb/tcb-conf#readme",
   "dependencies": {
+    "@beetcb/tcb-conf": "^0.0.0",
     "@cloudbase/manager-node": "^3.9.0"
   }
 }

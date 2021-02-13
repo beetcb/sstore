@@ -17,7 +17,7 @@ const Conf = require('@beetcb/tcb-conf')
 
 /**
  * Conf instructor takes in 1 or 0 param to create a entity
- * - `timeout` your function timeout, you can ignore it when the default timeout is used
+ * - `timeout` your function timeout(in seconds), you can ignore it when the default timeout is used
  */
 const conf = new Conf(10)
 
