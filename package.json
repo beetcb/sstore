@@ -1,0 +1,29 @@
+{
+  "name": "tcb-conf",
+  "version": "0.0.0",
+  "description": "store things at cloudbase function runtime",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beetcb/tcb-conf.git"
+  },
+  "keywords": [
+    "tcb",
+    "tencent",
+    "cloudbase",
+    "scf",
+    "severless"
+  ],
+  "author": "beetcb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beetcb/tcb-conf/issues"
+  },
+  "homepage": "https://github.com/beetcb/tcb-conf#readme",
+  "dependencies": {
+    "@cloudbase/manager-node": "^3.9.0"
+  }
+}
