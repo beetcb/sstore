@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/beetcb/tcb-conf#readme",
   "dependencies": {
-    "@beetcb/tcb-conf": "^0.0.0",
+    "@beetcb/tcb-conf": "^0.0.2",
     "@cloudbase/manager-node": "^3.9.0"
   }
 }
