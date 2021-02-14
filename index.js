@@ -29,14 +29,14 @@ class Conf {
 
   set(key, value) {
     conf[key] = value
+    envVariables.conf = stringify(conf)
     // Store conf as env, this shall not block function runtime
-    buffer(() => {
-      envVariables.conf = stringify(conf)
+    buffer(() =>
       tcb.functions.updateFunctionConfig({
         name: funcName,
         envVariables,
       })
-    })
+    )
     return value
   }
 
@@ -47,13 +47,13 @@ class Conf {
 
   // Set global env variables
   setGlEnv(key, value) {
-    buffer(() => {
-      envVariables[key] = stringify(value)
+    envVariables[key] = stringify(value)
+    buffer(() =>
       tcb.functions.updateFunctionConfig({
         name: funcName,
         envVariables,
       })
-    })
+    )
     return value
   }
 }
