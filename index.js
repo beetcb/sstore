@@ -31,7 +31,7 @@ class Conf {
     conf[key] = value
     // Store conf as env, this shall not block function runtime
     buffer(() => {
-      envVariables.conf = JSON.stringify(conf)
+      envVariables.conf = stringify(conf)
       tcb.functions.updateFunctionConfig({
         name: funcName,
         envVariables,
@@ -39,6 +39,7 @@ class Conf {
     })
     return value
   }
+
   // Get global env variables
   getGlEnv(key) {
     return envVariables[key]
@@ -47,7 +48,7 @@ class Conf {
   // Set global env variables
   setGlEnv(key, value) {
     buffer(() => {
-      envVariables[key] = JSON.stringify(value)
+      envVariables[key] = stringify(value)
       tcb.functions.updateFunctionConfig({
         name: funcName,
         envVariables,
@@ -55,6 +56,12 @@ class Conf {
     })
     return value
   }
+}
+
+function stringify(data) {
+  if (!data) return
+  if (typeof data === 'string') return data
+  return JSON.stringify(data)
 }
 
 // Buffer to avoid multiple request
