@@ -1,14 +1,26 @@
 const CloudBase = require('@cloudbase/manager-node')
+const funcName = process.env.SCF_FUNCTIONNAME
 
-let tcb, timeout, conf
+let tcb, timeout, timeUpdater, conf
+const envVariables = {}
+
 // Make full use of functions `hot context`
 // https://docs.cloudbase.net/cloud-function/deep-principle.html#shi-li-fu-yong
-module.exports = class {
-  constructor(t) {
+class Conf {
+  constructor() {
     const data = process.env.conf
     conf = data ? JSON.parse(data) : {}
     tcb = new CloudBase({})
-    timeout = t ? t * 1000 : 20000
+  }
+
+  async load() {
+    const { Environment, Timeout } = await tcb.functions.getFunctionDetail(
+      funcName
+    )
+    Environment.Variables.forEach(e => {
+      envVariables[e.Key] = e.Value
+    })
+    timeout = Timeout
   }
 
   get(key) {
@@ -17,16 +29,38 @@ module.exports = class {
 
   set(key, value) {
     conf[key] = value
-    let timeUpdater
     // Store conf as env, this shall not block function runtime
-    timeUpdater ? clearTimeout(timeUpdater) : null
-    timeUpdater = setTimeout(
-      () =>
-        tcb.functions.updateFunctionConfig({
-          name: process.env.SCF_FUNCTIONNAME,
-          envVariables: { conf: JSON.stringify(conf) },
-        }),
-      timeout - 1000
-    )
+    buffer(() => {
+      envVariables.conf = JSON.stringify(conf)
+      tcb.functions.updateFunctionConfig({
+        name: funcName,
+        envVariables,
+      })
+    })
+    return value
+  }
+  // Get global env variables
+  getGlEnv(key) {
+    return envVariables[key]
+  }
+
+  // Set global env variables
+  setGlEnv(key, value) {
+    buffer(() => {
+      envVariables[key] = JSON.stringify(value)
+      tcb.functions.updateFunctionConfig({
+        name: funcName,
+        envVariables,
+      })
+    })
+    return value
   }
 }
+
+// Buffer to avoid multiple request
+function buffer(cb) {
+  timeUpdater ? clearTimeout(timeUpdater) : null
+  timeUpdater = setTimeout(cb, timeout - 10)
+}
+
+module.exports = new Conf()
