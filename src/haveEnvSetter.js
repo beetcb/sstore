@@ -1,7 +1,7 @@
 const CloudBase = require('@cloudbase/manager-node')
 const { SCF_FUNCTIONNAME, SCF_NAMESPACE } = process.env
 
-let tcb, timeout, timeUpdater, hotConf
+let tcb, timeUpdater, hotConf
 const envVariables = {}
 
 // Make full use of functions `hot context`
@@ -14,15 +14,12 @@ class Conf {
   }
 
   async load() {
-    const { Environment, Timeout } = await tcb.functions.getFunctionDetail(
+    const { Environment } = await tcb.functions.getFunctionDetail(
       SCF_FUNCTIONNAME
     )
     Environment.Variables.forEach(e => {
       envVariables[e.Key] = e.Value
     })
-    this.timeTracker = process.hrtime()
-
-    timeout = Timeout
   }
 
   get(key) {
@@ -33,12 +30,13 @@ class Conf {
     hotConf[key] = value
     envVariables.conf = stringify(hotConf)
     // Store conf as env, this shall not block function runtime
-    this.buffer(() =>
+    this.buffer(() => {
+      console.log('Successfully stored env variables')
       tcb.functions.updateFunctionConfig({
         name: SCF_FUNCTIONNAME,
         envVariables,
       })
-    )
+    })
     return value
   }
 
@@ -62,9 +60,8 @@ class Conf {
 
   // Buffer to avoid multiple request
   buffer(cb) {
-    const last = timeout - hrtimeToSeconds(this.timeTracker)
     timeUpdater ? clearTimeout(timeUpdater) : null
-    timeUpdater = setTimeout(cb, (last - 1) * 1000)
+    timeUpdater = setTimeout(cb, 0)
   }
 }
 
@@ -72,11 +69,6 @@ function stringify(data) {
   if (!data) return
   if (typeof data === 'string') return data
   return JSON.stringify(data)
-}
-
-function hrtimeToSeconds(timeTracker) {
-  const hrtime = process.hrtime(timeTracker)
-  return (hrtime[0] * 1e9 + hrtime[1]) / 1e9
 }
 
 module.exports = new Conf()
