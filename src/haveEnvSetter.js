@@ -50,23 +50,21 @@ class Conf {
   // Set global env variables
   setGlEnv(key, value) {
     envVariables[key] = stringify(value)
-    this.buffer(() =>
+    this.buffer(() => {
+      console.log('Successfully stored env variables')
       tcb.functions.updateFunctionConfig({
-        name: funcName,
+        name: SCF_FUNCTIONNAME,
         envVariables,
       })
-    )
+    })
     return value
   }
 
   // Buffer to avoid multiple request
   buffer(cb) {
     const last = timeout - hrtimeToSeconds(this.timeTracker)
-    console.log(
-      `Will update env after ${last} seconds (the prev update had been canceled!)`
-    )
     timeUpdater ? clearTimeout(timeUpdater) : null
-    timeUpdater = setTimeout(cb, (last - 0.1) * 1000)
+    timeUpdater = setTimeout(cb, (last - 1) * 1000)
   }
 }
 

@@ -30,6 +30,7 @@ class Conf {
   set(key, value) {
     hotConf[key] = value
     this.buffer(() => {
+      console.log('Successfully stored data to /tmp/conf/conf.json')
       fs.promises.writeFile(confPath, stringify(hotConf))
     })
     return value
@@ -42,7 +43,7 @@ class Conf {
       `Will update env after ${last} seconds (the prev update was been canceled!)`
     )
     timeUpdater ? clearTimeout(timeUpdater) : null
-    timeUpdater = setTimeout(cb, (last - 0.1) * 1000)
+    timeUpdater = setTimeout(cb, (last - 1) * 1000)
   }
 }
 

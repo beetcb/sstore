@@ -6,7 +6,7 @@ You can also use it as a function runtime's environment variables setter(beacaus
 
 ### when to use it?
 
-When you have a tiny piese of data(an expiring `secret-key`, for example), `sstore` stores it for you.
+When you have a tiny piese of data(an expiring `access-token`, for example), `sstore` stores it for you.
 
 Inaccurately, sstore cloud be alternative to a database (for storing tiny data)
 
