@@ -27,8 +27,10 @@ class Conf {
   }
 
   set(key, value) {
-    hotConf[key] = value
-    envVariables.conf = stringify(hotConf)
+    if (key && value) {
+      hotConf[key] = value
+      envVariables.conf = stringify(hotConf)
+    }
     // Store conf as env, this shall not block function runtime
     this.buffer(() => {
       console.log('Successfully stored env variables')
@@ -40,6 +42,16 @@ class Conf {
     return value
   }
 
+  del(key) {
+    delete hotConf[key]
+    this.set()
+  }
+
+  clear() {
+    envVariables.conf = {}
+    this.set()
+  }
+
   // Get global env variables
   getGlEnv(key) {
     return envVariables[key]
@@ -47,7 +59,9 @@ class Conf {
 
   // Set global env variables
   setGlEnv(key, value) {
-    envVariables[key] = stringify(value)
+    if (key && value) {
+      envVariables[key] = stringify(value)
+    }
     this.buffer(() => {
       console.log('Successfully stored env variables')
       tcb.functions.updateFunctionConfig({
@@ -56,6 +70,11 @@ class Conf {
       })
     })
     return value
+  }
+
+  delGlEnv(key) {
+    delete envVariables[key]
+    this.setGlEnv()
   }
 
   // Buffer to avoid multiple request

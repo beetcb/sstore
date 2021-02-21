@@ -22,16 +22,20 @@ exports.main = async () => {
 }
 ```
 
-**conf.\<`method`\>**:
+**sstore.\<`method`\>**:
 
-- get(`key`): get conf `key`'s value
-- set(`key`, `value`): set conf `key` using `value`
+- get(`key`): get `key`'s value
+- set(`key`, `value`): set `key` using `value`
+- del(`key`): delete `key`'s value
+- clear(): delete all the key value pairs
 - getGlEnv(`key`)[CloudBase]: get global environment variable `key`'s value
-- setGlEnv(`key`, `value`)[CloudBase]: set global environment variable `key` using `value`
+- setGlEnv(`key`, `value`)[CloudBase]: set global environment variable `key`'s `value`
+- delGlEnv(`key`)[CloudBase]: delete global environment variable `key`'s value
 
 ### how it works?
 
-Under the hood, when the function is about to reach the timeout(about 100ms brfore timeout, cause we don't want to block the function excution):
+Under the hood, when the function is about to end:
 
-- On platforms that do not support setting environment variables via api(i.e. Vercel): `sstore` stores data to `/tmp/conf/conf.json`, please do not rely on it, it's non-persistent
-- On platforms that do support setting environment variables via api(i.e. CloudBase): `sstore` starts to update the function's environment variables for next time invoking, stored data will still be there next time you invoke that function
+- On platforms that do not support setting environment variables via api(e.g. Vercel): `sstore` stores data to `/tmp/conf/conf.json`, please do not rely on it, it's non-persistent
+
+- On platforms that do support setting environment variables via api(e.g. CloudBase): `sstore` starts to update the function's environment variables for next time invoking, stored data will still be there next time you invoke that function
