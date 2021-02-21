@@ -1,7 +1,7 @@
 const CloudBase = require('@cloudbase/manager-node')
 const { SCF_FUNCTIONNAME, SCF_NAMESPACE } = process.env
 
-let tcb, timeUpdater, hotConf
+let tcb, hotConf
 const envVariables = {}
 
 // Make full use of functions `hot context`
@@ -44,7 +44,7 @@ class Conf {
 
   // Get global env variables
   getGlEnv(key) {
-    return envVariables[key]
+    return process.env[key]
   }
 
   // Set global env variables

@@ -1,7 +1,7 @@
 const fs = require('fs')
 const confPath = `/tmp/conf/conf.json`
 
-let hotConf, timeUpdater
+let hotConf
 
 class Conf {
   constructor() {
@@ -16,7 +16,8 @@ class Conf {
     if (!fs.existsSync(confPath)) {
       fs.writeFileSync(confPath, '{}')
     }
-    hotConf = fs.promises.readFile(confPath).then(data => JSON.parse(data))
+
+    hotConf = JSON.parse(fs.readFileSync(confPath))
   }
 
   get(key) {
