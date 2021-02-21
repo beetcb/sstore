@@ -4,8 +4,7 @@ const confPath = `/tmp/conf/conf.json`
 let hotConf, timeUpdater
 
 class Conf {
-  // We need to manually pass in the timeout cause we simply don't
-  async load() {
+  constructor() {
     if (!fs.existsSync('/tmp')) {
       fs.mkdirSync('/tmp')
     } else {
@@ -17,7 +16,7 @@ class Conf {
     if (!fs.existsSync(confPath)) {
       fs.writeFileSync(confPath, '{}')
     }
-    hotConf = JSON.parse(await fs.promises.readFile(confPath))
+    hotConf = fs.promises.readFile(confPath).then(data => JSON.parse(data))
   }
 
   get(key) {
@@ -28,10 +27,6 @@ class Conf {
     if (key && value) {
       hotConf[key] = value
     }
-    this.buffer(() => {
-      console.log('Successfully stored data to /tmp/conf/conf.json')
-      fs.promises.writeFile(confPath, stringify(hotConf))
-    })
     return value
   }
 
@@ -46,9 +41,9 @@ class Conf {
   }
 
   // Buffer to avoid multiple request
-  buffer(cb) {
-    timeUpdater ? clearTimeout(timeUpdater) : null
-    timeUpdater = setTimeout(cb)
+  close() {
+    // Store conf to file, this shall not block function runtime
+    fs.promises.writeFile(confPath, stringify(hotConf))
   }
 }
 

@@ -11,15 +11,13 @@ class Conf {
     const data = process.env.conf
     hotConf = data ? JSON.parse(data) : {}
     tcb = new CloudBase({ envId: SCF_NAMESPACE })
-  }
-
-  async load() {
-    const { Environment } = await tcb.functions.getFunctionDetail(
-      SCF_FUNCTIONNAME
-    )
-    Environment.Variables.forEach(e => {
-      envVariables[e.Key] = e.Value
-    })
+    tcb.functions
+      .getFunctionDetail(SCF_FUNCTIONNAME)
+      .then(({ Environment }) => {
+        Environment.Variables.forEach(e => {
+          envVariables[e.Key] = e.Value
+        })
+      })
   }
 
   get(key) {
@@ -31,14 +29,6 @@ class Conf {
       hotConf[key] = value
       envVariables.conf = stringify(hotConf)
     }
-    // Store conf as env, this shall not block function runtime
-    this.buffer(() => {
-      console.log('Successfully stored env variables')
-      tcb.functions.updateFunctionConfig({
-        name: SCF_FUNCTIONNAME,
-        envVariables,
-      })
-    })
     return value
   }
 
@@ -62,13 +52,6 @@ class Conf {
     if (key && value) {
       envVariables[key] = stringify(value)
     }
-    this.buffer(() => {
-      console.log('Successfully stored env variables')
-      tcb.functions.updateFunctionConfig({
-        name: SCF_FUNCTIONNAME,
-        envVariables,
-      })
-    })
     return value
   }
 
@@ -78,9 +61,12 @@ class Conf {
   }
 
   // Buffer to avoid multiple request
-  buffer(cb) {
-    timeUpdater ? clearTimeout(timeUpdater) : null
-    timeUpdater = setTimeout(cb, 0)
+  close() {
+    // Store conf as env, this shall not block function runtime
+    tcb.functions.updateFunctionConfig({
+      name: SCF_FUNCTIONNAME,
+      envVariables,
+    })
   }
 }
 
