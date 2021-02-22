@@ -25,7 +25,7 @@ class Conf {
   }
 
   set(key, value) {
-    if (key && value) {
+    if (key && value !== undefined) {
       hotConf[key] = value
       envVariables.conf = stringify(hotConf)
     }
@@ -50,7 +50,7 @@ class Conf {
 
   // Set global env variables
   setGlEnv(key, value) {
-    if (key && value) {
+    if (key && value !== undefined) {
       process.env[key] = envVariables[key] = stringify(value)
     }
     return value

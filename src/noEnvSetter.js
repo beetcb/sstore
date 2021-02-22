@@ -25,7 +25,7 @@ class Conf {
   }
 
   set(key, value) {
-    if (key && value) {
+    if (key && value !== undefined) {
       hotConf[key] = value
     }
     return value
