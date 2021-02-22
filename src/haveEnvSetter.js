@@ -38,6 +38,7 @@ class Conf {
   }
 
   clear() {
+    hotConf = {}
     envVariables.conf = {}
     this.set()
   }
@@ -50,13 +51,14 @@ class Conf {
   // Set global env variables
   setGlEnv(key, value) {
     if (key && value) {
-      envVariables[key] = stringify(value)
+      process.env[key] = envVariables[key] = stringify(value)
     }
     return value
   }
 
   delGlEnv(key) {
     delete envVariables[key]
+    process.env[key] = undefined
     this.setGlEnv()
   }
 
