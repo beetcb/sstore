@@ -1,4 +1,5 @@
 const CloudBase = require('@cloudbase/manager-node')
+const { stringify } = require('./util/stringify')
 const { SCF_FUNCTIONNAME, SCF_NAMESPACE } = process.env
 
 let tcb, hotConf
@@ -67,12 +68,6 @@ class Conf {
       envVariables,
     })
   }
-}
-
-function stringify(data) {
-  if (!data) return
-  if (typeof data === 'string') return data
-  return JSON.stringify(data)
 }
 
 module.exports = new Conf()

@@ -1,4 +1,5 @@
 const fs = require('fs')
+const { stringify } = require('./util/stringify')
 const confPath = `/tmp/conf/conf.json`
 
 let hotConf = {}
@@ -44,12 +45,6 @@ class Conf {
     // Store conf to file, this shall not block function runtime
     fs.promises.writeFile(confPath, stringify(hotConf))
   }
-}
-
-function stringify(data) {
-  if (!data) return
-  if (typeof data === 'string') return data
-  return JSON.stringify(data)
 }
 
 module.exports = new Conf()
