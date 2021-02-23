@@ -1,6 +1,6 @@
 {
   "name": "@beetcb/sstore",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "store things at severless function runtime",
   "main": "dist/index.js",
   "files": [

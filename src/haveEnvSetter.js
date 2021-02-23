@@ -27,20 +27,16 @@ class Conf {
   set(key, value) {
     if (key && value !== undefined) {
       hotConf[key] = value
-      envVariables.conf = stringify(hotConf)
     }
     return value
   }
 
   del(key) {
     delete hotConf[key]
-    this.set()
   }
 
   clear() {
     hotConf = {}
-    envVariables.conf = {}
-    this.set()
   }
 
   // Get global env variables
@@ -64,6 +60,7 @@ class Conf {
 
   // Buffer to avoid multiple request
   close() {
+    envVariables.conf = stringify(hotConf)
     // Store conf as env, this shall not block function runtime
     tcb.functions.updateFunctionConfig({
       name: SCF_FUNCTIONNAME,

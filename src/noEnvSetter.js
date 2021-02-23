@@ -1,7 +1,7 @@
 const fs = require('fs')
 const confPath = `/tmp/conf/conf.json`
 
-let hotConf
+let hotConf = {}
 
 class Conf {
   constructor() {
@@ -33,12 +33,10 @@ class Conf {
 
   del(key) {
     delete hotConf[key]
-    this.set()
   }
 
   clear() {
     hotConf = {}
-    this.set()
   }
 
   // Buffer to avoid multiple request
