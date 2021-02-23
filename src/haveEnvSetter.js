@@ -1,5 +1,5 @@
 const CloudBase = require('@cloudbase/manager-node')
-const { stringify } = require('./util/stringify')
+const stringify = require('./util/stringify')
 const { SCF_FUNCTIONNAME, SCF_NAMESPACE } = process.env
 
 let tcb, hotConf

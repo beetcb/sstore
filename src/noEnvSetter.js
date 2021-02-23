@@ -1,5 +1,5 @@
 const fs = require('fs')
-const { stringify } = require('./util/stringify')
+const stringify = require('./util/stringify')
 const confPath = `/tmp/conf/conf.json`
 
 let hotConf = {}
