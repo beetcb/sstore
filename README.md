@@ -6,7 +6,7 @@
 
 When you have a tiny piese of data(an expiring `access-token`, for example), `sstore` stores it for you.
 
-Inaccurately, sstore cloud be alternative to a database (for storing tiny data).
+Inaccurately, sstore cloud be an alternative to a database (for storing tiny data).
 
 Better yet, sstore **won't block any code execution** and **there are no network requests** until you use the `sstore.close` method.
 
@@ -18,7 +18,7 @@ Better yet, sstore **won't block any code execution** and **there are no network
 const sstore = require('@beetcb/sstore')
 
 exports.main = () => {
-  // If `secret` if undefind, set it
+  // If `secret` is undefind, set it
   console.log(sstore.get('secret') || sstore.set('secret', 'xxx 🕊'))
   // Code logic is done, starts storing,
   sstore.close()
