@@ -1,26 +1,18 @@
 const stringify = require('./util/stringify')
 
-const platform = {
-  vercel: process.env.VERCEL,
-  tcb: process.env.SCF_FUNCTIONNAME,
-}
-
-const { getEnv, storeEnv } = require(`./platforms/
-  ${Object.keys(platform).reduce(
-    (string, e) => (platform[e] ? string + e : string),
-    ''
-  )}`)
-
 let hotConf
 const envVariables = {}
 
 // Make full use of functions `hot context`
 // https://docs.cloudbase.net/cloud-function/deep-principle.html#shi-li-fu-yong
 class Conf {
-  constructor() {
+  constructor(curPlatform) {
     const data = process.env.conf
     hotConf = data ? JSON.parse(data) : {}
-    getEnv && getEnv()
+    const { getEnv, storeEnv } = require(`./platforms/${curPlatform}`)
+    this.curPlatform = curPlatform
+    this.getCustomEnv = getEnv
+    this.storeEnv = storeEnv
   }
 
   get(key) {
@@ -61,12 +53,16 @@ class Conf {
     this.setGlEnv()
   }
 
-  // Buffer to avoid multiple request
-  close() {
+  // A buffer to avoid multiple network request
+  async close() {
     envVariables.conf = stringify(hotConf)
+    // Grab original env variables, tcb specific
+    if (this.curPlatform === 'tcb') {
+      await this.getCustomEnv(envVariables)
+    }
     // Store conf as env, this shall not block function runtime
-    storeEnv()
+    await this.storeEnv(envVariables)
   }
 }
 
-module.exports = new Conf()
+module.exports = curPlatform => new Conf(curPlatform)

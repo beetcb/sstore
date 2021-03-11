@@ -1,4 +1,12 @@
-const isHaveEnvSetter = process.env.SCF_METADATA_TCB_FD
-module.exports = isHaveEnvSetter
-  ? require('./haveEnvSetter')
-  : require('./noEnvSetter')
+const platforms = {
+  vercel: process.env.VERCEL,
+  tcb: process.env.SCF_FUNCTIONNAME,
+}
+const curPlatform = Object.keys(platforms).reduce(
+  (string, e) => (platforms[e] ? string + e : string),
+  ''
+)
+
+module.exports = curPlatform
+  ? require('./haveEnvSetter')(curPlatform)
+  : require('./noEnvSetter')(curPlatform)
