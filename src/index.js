@@ -1,7 +1,7 @@
 const platforms = {
-  vercel: process.env.VERCEL,
   tcb: process.env.SCF_FUNCTIONNAME,
 }
+
 const curPlatform = Object.keys(platforms).reduce(
   (string, e) => (platforms[e] ? string + e : string),
   ''
