@@ -1,8 +1,17 @@
-const CloudBase = require('@cloudbase/manager-node')
 const stringify = require('./util/stringify')
-const { SCF_FUNCTIONNAME, SCF_NAMESPACE } = process.env
 
-let tcb, hotConf
+const platform = {
+  vercel: process.env.VERCEL,
+  tcb: process.env.SCF_FUNCTIONNAME,
+}
+
+const { getEnv, storeEnv } = require(`./platforms/
+  ${Object.keys(platform).reduce(
+    (string, e) => (platform[e] ? string + e : string),
+    ''
+  )}`)
+
+let hotConf
 const envVariables = {}
 
 // Make full use of functions `hot context`
@@ -11,14 +20,7 @@ class Conf {
   constructor() {
     const data = process.env.conf
     hotConf = data ? JSON.parse(data) : {}
-    tcb = new CloudBase({ envId: SCF_NAMESPACE })
-    tcb.functions
-      .getFunctionDetail(SCF_FUNCTIONNAME)
-      .then(({ Environment }) => {
-        Environment.Variables.forEach(e => {
-          envVariables[e.Key] = e.Value
-        })
-      })
+    getEnv && getEnv()
   }
 
   get(key) {
@@ -63,10 +65,7 @@ class Conf {
   close() {
     envVariables.conf = stringify(hotConf)
     // Store conf as env, this shall not block function runtime
-    tcb.functions.updateFunctionConfig({
-      name: SCF_FUNCTIONNAME,
-      envVariables,
-    })
+    storeEnv()
   }
 }
 
