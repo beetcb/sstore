@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/v/@beetcb/sstore?style=social)](https://www.npmjs.com/package/@beetcb/sstore)
+
 ### What the hack is `sstore`?
 
 **s**erverless-**store** is how you store tiny things at serverless function runtime，inspired by [conf](https://github.com/sindresorhus/conf).
