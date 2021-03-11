@@ -65,4 +65,15 @@ class Conf {
   }
 }
 
-module.exports = curPlatform => new Conf(curPlatform)
+function curPlatform() {
+  const platforms = {
+    tcb: process.env.SCF_FUNCTIONNAME,
+  }
+
+  return Object.keys(platforms).reduce(
+    (string, e) => (platforms[e] ? string + e : string),
+    ''
+  )
+}
+
+module.exports = new Conf(curPlatform())

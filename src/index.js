@@ -1,12 +1,5 @@
-const platforms = {
-  tcb: process.env.SCF_FUNCTIONNAME,
-}
+const isHaveEnvSetter = process.env.SCF_FUNCTIONNAME !== undefined
 
-const curPlatform = Object.keys(platforms).reduce(
-  (string, e) => (platforms[e] ? string + e : string),
-  ''
-)
-
-module.exports = curPlatform
-  ? require('./haveEnvSetter')(curPlatform)
-  : require('./noEnvSetter')(curPlatform)
+module.exports = isHaveEnvSetter
+  ? require('./haveEnvSetter')
+  : require('./noEnvSetter')
