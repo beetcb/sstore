@@ -9,7 +9,7 @@ class Conf {
   constructor(curPlatform) {
     const data = process.env.conf
     hotConf = data ? JSON.parse(data) : {}
-    const { getEnv, storeEnv } = require(`./platforms/${curPlatform}`)
+    const { getEnv, storeEnv } = foolBundler(curPlatform)
     this.curPlatform = curPlatform
     this.getCustomEnv = getEnv
     this.storeEnv = storeEnv
@@ -55,17 +55,18 @@ class Conf {
 
   // A buffer to avoid multiple network request
   async close() {
-    envVariables.conf = stringify(hotConf)
     // Grab original env variables, tcb specific
     if (this.curPlatform === 'tcb') {
       await this.getCustomEnv(envVariables)
     }
+    // Create or update conf
+    envVariables.conf = stringify(hotConf)
     // Store conf as env, this shall not block function runtime
     await this.storeEnv(envVariables)
   }
 }
 
-function curPlatform() {
+function getCurPlatform() {
   const platforms = {
     tcb: process.env.SCF_FUNCTIONNAME,
   }
@@ -76,4 +77,12 @@ function curPlatform() {
   )
 }
 
-module.exports = new Conf(curPlatform())
+function foolBundler(curPlatform) {
+  switch (curPlatform) {
+    case 'tcb': {
+      return require('./platforms/tcb')
+    }
+  }
+}
+
+module.exports = new Conf(getCurPlatform())
