@@ -16,6 +16,19 @@ Better yet, sstore **won't block any code execution** and **there are no network
 
 ### How to use it?
 
+```ts
+declare namespace SstoreAPI {
+  export function getGlEnv(key: string): any
+  export function setGlEnv(key: string, value: any): any
+  export function delGlEnv(key: string): void
+  export function get(key: string): any
+  export function set(key: string, value: any): any
+  export function del(key: string): void
+  export function clear(): void
+  export function close(): void
+}
+```
+
 ```js
 const sstore = require('@beetcb/sstore')
 

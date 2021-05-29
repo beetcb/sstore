@@ -18,7 +18,7 @@ class Conf {
       fs.writeFileSync(confPath, '{}')
     }
 
-    hotConf = JSON.parse(fs.readFileSync(confPath))
+    hotConf = JSON.parse(fs.readFileSync(confPath) || "{}")
   }
 
   get(key) {
