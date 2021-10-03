@@ -1,6 +1,9 @@
 const fs = require('fs')
+const { createHash } = require('crypto')
 const stringify = require('./util/stringify')
-const confPath = `/tmp/conf/conf.json`
+const confPath = `/tmp/conf/${createHash('md5')
+  .update('conf.json', 'utf8')
+  .digest('hex')}`
 
 let hotConf = {}
 
@@ -18,7 +21,7 @@ class Conf {
       fs.writeFileSync(confPath, '{}')
     }
 
-    hotConf = JSON.parse(fs.readFileSync(confPath) || "{}")
+    hotConf = JSON.parse(fs.readFileSync(confPath).toString() || '{}')
   }
 
   get(key) {
